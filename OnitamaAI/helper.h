@@ -1,33 +1,62 @@
 #pragma once
 #include <iostream>
 #include "defs.h"
+#include <vector>
 
-void PrintBitboard(unsigned int bitboard) {
-	// loop through bitboard
-	std::cout << "Printing Board\n" << std::endl;
-	for (int row = 4; row >= 0; row--) {
+void PrintBitboard(unsigned int bitboard);
 
-		std::cout << row + 1 << "   ";
+std::vector <std::vector <int> > bitboardTo2DVector(unsigned int bitboard);
 
-		for (int col = 0; col < 5; col++) {
-			// calculate sqare
-			int square = row * 5 + col;
+std::vector <std::vector <int> > rotateMatrix180(const std::vector <std::vector <int> >& matrix);
 
-			// if bit exists at the square
-			if (get_bit(bitboard, square)) {
-				std::cout << "1 ";
-			}
-			else {
-				std::cout << "0 ";
-			}
-		}
+unsigned int matrix2DToBitboard(const std::vector <std::vector <int> >& matrix);
 
-		std::cout << std::endl;
+unsigned int rotateBitboard180(unsigned int bitboard);
+
+
+inline int countBits(unsigned int bitboard)
+{
+	int count = 0;
+
+	// clear LSB and count
+	while (bitboard)
+	{
+		count++;
+		bitboard &= bitboard - 1;
 	}
-
-	std::cout << "\n    A B C D E" << std::endl;
-	std::cout << std::hex << "\n   Hex: 0x" << bitboard << std::dec << std::endl;
-
-	std::cout << std::endl;
-	std::cout << "Ending Printing Board" << std::endl;
+	return count;
 }
+
+
+
+static const int index32[32] =
+{
+   0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
+  8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31
+};
+
+// get least significant 1st bit index
+inline int get_LS1B_index(unsigned int bitboard)
+{
+	// make sure bitboard is not equal to zero
+	if (bitboard)
+	{
+		// count trailing bits before LS1B
+		const unsigned int debruijn32 = (0x07C4ACDDU);
+
+		bitboard |= bitboard >> 1; // first round down to one less than a power of 2 
+		bitboard |= bitboard >> 2;
+		bitboard |= bitboard >> 4;
+		bitboard |= bitboard >> 8;
+		bitboard |= bitboard >> 16;
+		return index32[(bitboard * debruijn32) >> 27];
+		//return countBits((bitboard & ((unsigned long long)0-bitboard)) - 1);
+	}
+	else
+	{
+		// return illegal index
+		return -1;
+	}
+}
+
+

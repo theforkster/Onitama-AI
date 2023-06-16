@@ -127,9 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="OnitamaAI.cpp" />
+    <ClCompile Include="AttackTables.cpp" />
+    <ClCompile Include="helper.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttackTables.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="helper.h" />
   </ItemGroup>

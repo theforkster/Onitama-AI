@@ -15,3 +15,5 @@ enum {
 	a5, b5, c5, d5, e5,
 	noSquare
 };
+
+
